@@ -12,6 +12,8 @@ purple='\[\e[0;35m\]'
 PURPLE='\[\e[1;35m\]'
 cyan='\[\e[0;36m\]'
 CYAN='\[\e[1;36m\]'
+gray='\[\e[0;37m\]'
+WHITE='\[\e[1;37m\]'
 NC='\[\e[0m\]' 
 # High Intensty
 IBlack='\[\e[0;90m\]'       # Black
@@ -48,22 +50,22 @@ h() {
 export HISTIGNORE="h *:h"
 
 get_ip() {
-   exec 9<>/dev/tcp/whatismyip.com/80
-   echo -ne "GET / HTTP/1.0\r\n\r\n" >&9
-   sed -n -e '/Your IP:/{s/^ *//;s/<[^>]*>//g;p}' <&9
-   exec 9>&-
-   exec 9<&-
+	exec 9<>/dev/tcp/whatismyip.com/80
+	echo -ne "GET / HTTP/1.0\r\n\r\n" >&9
+	sed -n -e '/Your IP:/{s/^ *//;s/<[^>]*>//g;p}' <&9
+	exec 9>&-
+	exec 9<&-
 }
 
 get_country() {
-   exec 9<>/dev/tcp/whatismyipaddress.com/80
-   echo -ne "\
+	exec 9<>/dev/tcp/whatismyipaddress.com/80
+	echo -ne "\
 GET / HTTP/1.1\r\n\
 Host: whatismyipaddress.com\r\n\
 User-Agent: Mozilla/5.0\r\n\r\n" >&9
-   sed -n -e '/Country/{s/^[[:space:]]*//;s/<[^>]*>//g;s/:/: /;p;q}' <&9
-   exec 9>&-
-   exec 9<&-
+	sed -n -e '/Country/{s/^[[:space:]]*//;s/<[^>]*>//g;s/:/: /;p;q}' <&9
+	exec 9>&-
+	exec 9<&-
 }
 ice-add() {
 	if [ $# != 1 ]; then
@@ -95,59 +97,65 @@ ice_icon() {
 }
 
 serv() {
-   if [ $# -ne 1 ] && [ $# -ne 2 ]; then
-      echo "usage: serv [file]"
-      exit 1
-   fi
-   port=${2:-1234}
-   ( echo -ne "HTTP/1.0
+	if [ $# -ne 1 ] && [ $# -ne 2 ]; then
+		echo "usage: serv [file]"
+		exit 1
+	fi
+	port=${2:-1234}
+	( echo -ne "HTTP/1.0
 Content-type: application/octet-stream
 Content-length: $(wc -c $1 | cut -d\  -f 1)
 Content-disposition: attachment; filename=\"$1\"\n"
-   cat $1 ) | nc -l -p $port
+	cat $1 ) | nc -l -p $port
 }
 
 prompt_header() {
-   [ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
-   dir=`echo $PWD | sed "s#$HOME#~#"`
-   termsize=$(tput cols)
-   prompt_string="---[ ${USER} ${HOSTNAME%%.*}:$dir ]-($cmd_num)-"
-   numchars=${#prompt_string}
-   let chardiff=$termsize-$numchars
-   dashes=""
-   if [ $chardiff -lt 0 ]; then
-      let chardiff=-chardiff
-      ins="..."
-      ndir=$dir
-      ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/2))}
-      ndir=$ndir$ins
-      ndir=$ndir${dir:$((${#ndir}+$chardiff))}
-      dir=$ndir
-      #dir=$ins${dir:$(($numchars-$termsize+${#ins}))}
-   else
-      i=1
-      while [ $i -le $chardiff ]; do
-         dashes="-$dashes"
-         let i++
-      done
-   fi
+	#[ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
+	cmd_num=$( date +%T )
+	dir=`echo $PWD | sed "s#$HOME#~#"`
+	termsize=$(tput cols)
+	prompt_string="───┤ ${USER} ${HOSTNAME%%.*}:$dir ├─($cmd_num)─"
+	numchars=${#prompt_string}
+	let chardiff=$termsize-$numchars
+	dashes=""
+	if [ $chardiff -lt 0 ]; then
+		#--- use this:
+		let chardiff=-chardiff
+		#ins="..."
+		ins="*"
+		#ndir=$dir
+		#ndir=$(echo $dir | sed 's#\(~\?/[^/]\+/\).*#\1#')
+		ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/4))}
+		#ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/2))}
+		ndir=$ndir$ins
+		ndir=$ndir${dir:$((${#ndir}+$chardiff))}
+		dir=$ndir
+		#--- or use this:
+		#dir=$ins${dir:$(($numchars-$termsize+${#ins}))}
+	else
+		i=1
+		while [ $i -le $chardiff ]; do
+			dashes="─$dashes"
+			let i++
+		done
+	fi
 }
 #print_tty() {
-#   tty=$(tty | sed -e 's#/dev/##')
-#   tput sc
-#   tput cup 0 $(($(tput cols)-${#tty}-1))
-#   echo -e $tty
-#   tput rc
+#	tty=$(tty | sed -e 's#/dev/##')
+#	tput sc
+#	tput cup 0 $(($(tput cols)-${#tty}-1))
+#	echo -e $tty
+#	tput rc
 #}
 if (($UID)); then
-   export PROMPT_COMMAND="prompt_header"
-   if [ "$TERM" = "screen.linux" ]; then
-      export PS1="---[ $GREEN${USER} $BLUE\h$NC:$BLUE\$dir $NC]-\$dashes($YELLOW\$cmd_num$NC)-\n \$$NC "
-   else
-      export PS1="$IBlack---[$GREEN ${USER} $BLUE\h$NC:$BLUE\$dir $NC$IBlack]-\$dashes($YELLOW\$cmd_num$IBlack)-\n$IBlack \$$NC "
-   fi
+	export PROMPT_COMMAND="prompt_header"
+if [ "$TERM" = "screen.linux" ]; then
+	export PS1="───┤ $GREEN${USER} $BLUE\h$NC:$BLUE\$dir $NC├─\$dashes($YELLOW\$cmd_num$NC)─\n \$$NC "
 else
-   unset PROMPT_COMMAND
+	export PS1="$IBlack───┤$GREEN ${USER} $BLUE\h$NC:$BLUE\$dir $NC$IBlack├─\$dashes($YELLOW\$cmd_num$IBlack)─\n$IBlack \$$NC "
+	fi
+else
+	unset PROMPT_COMMAND
 	export PS1="$RED\u $BLUE\h$NC:$BLUE\W $NC${IBlack}\\$ $NC"
 fi
 
