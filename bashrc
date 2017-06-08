@@ -29,6 +29,7 @@ alias cal="cal -3"
 alias la="ls -a"
 alias ll="ls -l"
 alias lla="ls -la"
+alias ltr="ls -ltr"
 
 export CD_ROOT=/mnt/cdrom
 
