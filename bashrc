@@ -149,10 +149,10 @@ prompt_header() {
 #}
 if (($UID)); then
 	export PROMPT_COMMAND="prompt_header"
-if [ "$TERM" = "screen.linux" ]; then
-	export PS1="───┤ $GREEN${USER} $BLUE\h$NC:$BLUE\$dir $NC├─\$dashes($YELLOW\$cmd_num$NC)─\n \$$NC "
-else
-	export PS1="$IBlack───┤$GREEN ${USER} $BLUE\h$NC:$BLUE\$dir $NC$IBlack├─\$dashes($YELLOW\$cmd_num$IBlack)─\n$IBlack \$$NC "
+	if [ "$TERM" = "screen.linux" ]; then
+		export PS1="───┤ $GREEN${USER} $BLUE\h$NC:$BLUE\$dir $NC├─\$dashes($YELLOW\$cmd_num$NC)─\n \$$NC "
+	else
+		export PS1="$IBlack───┤$GREEN ${USER} $BLUE\h$NC:$BLUE\$dir $NC$IBlack├─\$dashes($YELLOW\$cmd_num$IBlack)─\n$IBlack \$$NC "
 	fi
 else
 	unset PROMPT_COMMAND
