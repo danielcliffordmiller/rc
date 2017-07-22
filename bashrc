@@ -26,7 +26,7 @@ ICyan='\[\e[0;96m\]'        # Cyan
 IWhite='\[\e[0;97m\]'       # White
 
 alias cal="cal -3"
-alias la="ls -a"
+alias la="ls -la"
 alias ll="ls -l"
 alias lla="ls -la"
 alias ltr="ls -ltr"
@@ -179,6 +179,14 @@ lowercase() {
 }
 make_keys() {
 	sed -e 's/".*"/asdf/g' ~/.icewm/toolbar | awk -f ~/.icewm/make_keys.awk
+}
+notify-aptitude-finished() {
+	while true; do
+		if [ -z "$(pgrep aptitude)" ]; then
+			notify-send "Aptitude is finished"
+			break
+		fi
+	done
 }
 
 export WINEDLLOVERRIDES='winemenubuilder.exe=d'
