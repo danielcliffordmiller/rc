@@ -1,31 +1,37 @@
 black='\[\e[0;30m\]'
-BLACK='\[\e[1;30m\]'
 red='\[\e[0;31m\]'
-RED='\[\e[1;31m\]'
 green='\[\e[0;32m\]'
-GREEN='\[\e[1;32m\]'
 yellow='\[\e[0;33m\]'
-YELLOW='\[\e[1;33m\]'
 blue='\[\e[0;34m\]'
-BLUE='\[\e[1;34m\]'
 purple='\[\e[0;35m\]'
-PURPLE='\[\e[1;35m\]'
 cyan='\[\e[0;36m\]'
-CYAN='\[\e[1;36m\]'
 gray='\[\e[0;37m\]'
-WHITE='\[\e[1;37m\]'
-NC='\[\e[0m\]' 
-# High Intensty
-IBlack='\[\e[0;90m\]'       # Black
-IRed='\[\e[0;91m\]'         # Red
-IGreen='\[\e[0;92m\]'       # Green
-IYellow='\[\e[0;93m\]'      # Yellow
-IBlue='\[\e[0;94m\]'        # Blue
-IPurple='\[\e[0;95m\]'      # Purple
-ICyan='\[\e[0;96m\]'        # Cyan
-IWhite='\[\e[0;97m\]'       # White
+nc='\[\e[0m\]' 
+# bold colors
+black_b='\[\e[1;30m\]'
+red_b='\[\e[1;31m\]'
+green_b='\[\e[1;32m\]'
+yellow_b='\[\e[1;33m\]'
+blue_b='\[\e[1;34m\]'
+purple_b='\[\e[1;35m\]'
+cyan_b='\[\e[1;36m\]'
+white_b='\[\e[1;37m\]'
+# high intensty colors
+black_hi='\[\e[0;90m\]'       # Black
+red_hi='\[\e[0;91m\]'         # Red
+green_hi='\[\e[0;92m\]'       # Green
+yellow_hi='\[\e[0;93m\]'      # Yellow
+blue_hi='\[\e[0;94m\]'        # Blue
+purple_hi='\[\e[0;95m\]'      # Purple
+cyan_hi='\[\e[0;96m\]'        # Cyan
+white_hi='\[\e[0;97m\]'       # White
+# underlined colors
+nc_u='\[\e[0;4m\]'
+
+
 
 export HISTCONTROL="ignoreboth"
+export HISTIGNORE="h *:h"
 
 if [ "$(uname)" = "Darwin" ]; then
 	alias awk=gawk
@@ -57,7 +63,18 @@ h() {
 		print $NF;
 	} $1 !~ "#####" {print}'
 }
-export HISTIGNORE="h *:h"
+
+f() {
+	find . -name "$1" -print -quit
+}
+
+esc_bs() {
+	echo $1 | sed 's#\\#\\\\#g'
+}
+
+rm_brace() {
+	echo $1 | sed -e 's/\\\(\[\|\]\)//g'
+}
 
 get_ip() {
 	exec 9<>/dev/tcp/whatismyip.com/80
@@ -108,23 +125,18 @@ ice_icon() {
 
 serv() {
 	if [ $# -ne 1 ] && [ $# -ne 2 ]; then
-		echo "usage: serv [file]"
-		exit 1
+		echo -e "usage: serv $(rm_brace $nc_u)file$(rm_brace $nc) [$(rm_brace $nc_u)port$(rm_brace $nc)]"
+		return
 	fi
-	port=${2:-1234}
-	( echo -ne "HTTP/1.0
-Content-type: application/octet-stream
-Content-length: $(wc -c $1 | cut -d\  -f 1)
-Content-disposition: attachment; filename=\"$1\"\n"
+	port=${2:-8080}
+	( echo -ne "HTTP/1.1 200 OK\r
+Content-Type: application/octet-stream\r
+Connection: Keep-Alive\r
+Content-Length: $(wc -c $1 | cut -d\  -f 1)\r
+Content-Disposition: attachment; filename=\"$1\"\r
+ETag: \"1a2s3d4f\"\r
+Connection: close\r\n\r\n"
 	cat $1 ) | nc -l -p $port
-}
-
-f() {
-	find . -name "$1"
-}
-
-esc_bs() {
-	echo $1 | sed 's#\\#\\\\#g'
 }
 
 prompt_header() {
@@ -168,14 +180,14 @@ prompt_header() {
 	fi
 
 	if (($UID)); then
-		proto_PS1="$IBlack$()───┤$IGreen ${USER} $IBlue\h$NC:$IBlue\$dir$IBlack ├─${dashes}($IYellow\$cmd_num$NC$IBlack)─\n \$$NC "
+		proto_PS1="$black_hi$()───┤$green_hi ${USER} $blue_hi\h$nc:$blue_hi\$dir$black_hi ├─${dashes}($yellow_hi\$cmd_num$nc$black_hi)─\n \$$nc "
 		if [ ! -z "$git_string" ]; then
-			proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $IRed)$git_string$(esc_bs $IBlack)]\1(\2 /")
+			proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red_hi)$git_string$(esc_bs $black_hi)]\1(\2 /")
 		fi
 		export PS1="$proto_PS1"
 	else
 		unset PROMPT_COMMAND
-		export PS1="$RED\u $BLUE\h$NC:$BLUE\W $NC${IBlack}\\$ $NC"
+		export PS1="$red_b\u $blue_b\h$nc:$blue_b\W $nc${black_hi}\\$ $nc"
 	fi
 }
 #print_tty() {
