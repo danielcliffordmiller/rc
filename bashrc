@@ -25,6 +25,14 @@ IPurple='\[\e[0;95m\]'      # Purple
 ICyan='\[\e[0;96m\]'        # Cyan
 IWhite='\[\e[0;97m\]'       # White
 
+export HISTCONTROL="ignoreboth"
+
+if [ "$(uname)" = "Darwin" ]; then
+	alias awk=gawk
+	alias sed=gsed
+	alias ls="ls -G"
+fi
+
 alias cal="cal -3"
 alias la="ls -la"
 alias ll="ls -l"
@@ -41,6 +49,7 @@ h() {
 	n=${1:-9}
 	hist=$( history $n | sed -e 's/^[[:digit:] ]\{4\}[[:digit:]]/#####/' )
 	lines=$( echo "$hist" | sed -ne '/^#####/p' | wc -l )
+	let lines=$(echo $lines)
 	echo "$hist" | awk 'BEGIN {line='$lines'} $1 ~ "#####" {
 		printf("%5i  ", line--);
 		for(i=2; i<NF; i++)
@@ -110,12 +119,20 @@ Content-disposition: attachment; filename=\"$1\"\n"
 	cat $1 ) | nc -l -p $port
 }
 
+f() {
+	find . -name "$1"
+}
+
+esc_bs() {
+	echo $1 | sed 's#\\#\\\\#g'
+}
+
 prompt_header() {
 	#[ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
 	cmd_num=$( date +%T )
 	dir=`echo $PWD | sed "s#$HOME#~#"`
 	termsize=$(tput cols)
-	prompt_string="───┤ ${USER} ${HOSTNAME%%.*}:$dir ├─($cmd_num)─"
+	prompt_string="---| ${USER} ${HOSTNAME%%.*}:$dir |-($cmd_num)-"
 	numchars=${#prompt_string}
 	let chardiff=$termsize-$numchars
 	dashes=""
@@ -150,10 +167,11 @@ prompt_header() {
 #}
 if (($UID)); then
 	export PROMPT_COMMAND="prompt_header"
-if [ "$TERM" = "screen.linux" ]; then
-	export PS1="───┤ $GREEN${USER} $BLUE\h$NC:$BLUE\$dir $NC├─\$dashes($YELLOW\$cmd_num$NC)─\n \$$NC "
-else
-	export PS1="$IBlack───┤$GREEN ${USER} $BLUE\h$NC:$BLUE\$dir $NC$IBlack├─\$dashes($YELLOW\$cmd_num$IBlack)─\n$IBlack \$$NC "
+	if [ "$TERM" = "screen.linux" ]; then
+		export PS1="───┤ $GREEN${USER} $BLUE\h$NC:$BLUE\$dir $NC├─\$dashes($YELLOW\$cmd_num$NC)─\n \$$NC "
+	else
+#export PS1="$IBlack$()───┤$IGreen ${USER} $IBlue\h$NC:$IBlue\$dir$IBlack ├─\$dashes($IYellow\$cmd_num$NC$IBlack)─\n \$$NC "
+export PS1="$IBlack$()───┤$GREEN ${USER} $BLUE\h$NC:$BLUE\$dir$IBlack ├─\$dashes($YELLOW\$cmd_num$IBlack)─\n$IBlack \$$NC "
 	fi
 else
 	unset PROMPT_COMMAND

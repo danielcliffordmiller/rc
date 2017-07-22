@@ -10,3 +10,4 @@ set hlsearch
 
 nmap <F5> :! perl -c %
 nmap <F6> :! perl %
+nmap <F7> :! perl -d %
