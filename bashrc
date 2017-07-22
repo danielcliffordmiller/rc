@@ -130,9 +130,18 @@ esc_bs() {
 prompt_header() {
 	#[ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
 	cmd_num=$( date +%T )
+	git_string=$(git rev-parse --show-toplevel 2> /dev/null)
+	if [ ! -z "$git_string" ]; then
+		git_string="$(basename $git_string)"
+		git_string="$git_string:$(git branch | awk 'NF == 2 {print $2}')"
+		#git_string="[$git_string]─"
+		faux_git_string="[$git_string]─"
+	else
+		faux_git_string=""
+	fi
 	dir=`echo $PWD | sed "s#$HOME#~#"`
 	termsize=$(tput cols)
-	prompt_string="---| ${USER} ${HOSTNAME%%.*}:$dir |-($cmd_num)-"
+	prompt_string="---| ${USER} ${HOSTNAME%%.*}:$dir |-$faux_git_string($cmd_num)-"
 	numchars=${#prompt_string}
 	let chardiff=$termsize-$numchars
 	dashes=""
@@ -157,6 +166,17 @@ prompt_header() {
 			let i++
 		done
 	fi
+
+	if (($UID)); then
+		proto_PS1="$IBlack$()───┤$IGreen ${USER} $IBlue\h$NC:$IBlue\$dir$IBlack ├─${dashes}($IYellow\$cmd_num$NC$IBlack)─\n \$$NC "
+		if [ ! -z "$git_string" ]; then
+			proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $IRed)$git_string$(esc_bs $IBlack)]\1(\2 /")
+		fi
+		export PS1="$proto_PS1"
+	else
+		unset PROMPT_COMMAND
+		export PS1="$RED\u $BLUE\h$NC:$BLUE\W $NC${IBlack}\\$ $NC"
+	fi
 }
 #print_tty() {
 #	tty=$(tty | sed -e 's#/dev/##')
@@ -165,18 +185,7 @@ prompt_header() {
 #	echo -e $tty
 #	tput rc
 #}
-if (($UID)); then
-	export PROMPT_COMMAND="prompt_header"
-	if [ "$TERM" = "screen.linux" ]; then
-		export PS1="───┤ $GREEN${USER} $BLUE\h$NC:$BLUE\$dir $NC├─\$dashes($YELLOW\$cmd_num$NC)─\n \$$NC "
-	else
-#export PS1="$IBlack$()───┤$IGreen ${USER} $IBlue\h$NC:$IBlue\$dir$IBlack ├─\$dashes($IYellow\$cmd_num$NC$IBlack)─\n \$$NC "
-export PS1="$IBlack$()───┤$GREEN ${USER} $BLUE\h$NC:$BLUE\$dir$IBlack ├─\$dashes($YELLOW\$cmd_num$IBlack)─\n$IBlack \$$NC "
-	fi
-else
-	unset PROMPT_COMMAND
-	export PS1="$RED\u $BLUE\h$NC:$BLUE\W $NC${IBlack}\\$ $NC"
-fi
+export PROMPT_COMMAND="prompt_header"
 
 lowercase() {
 	for file; do
