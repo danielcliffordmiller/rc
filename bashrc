@@ -77,11 +77,7 @@ rm_brace() {
 }
 
 get_ip() {
-	exec 9<>/dev/tcp/whatismyip.com/80
-	echo -ne "GET / HTTP/1.0\r\n\r\n" >&9
-	sed -n -e '/Your IP:/{s/^ *//;s/<[^>]*>//g;p}' <&9
-	exec 9>&-
-	exec 9<&-
+	perl -e 'use strict;use IO::Socket::INET;my$s=new IO::Socket::INET(PeerAddr=>"ipaddress.com",PeerPort=>"80",Proto=>"tcp");print$s "GET / HTTP/1.1\r\nHost: ipaddress.com\r\nAccept: text/html\r\nConnection: close\r\n\r\n";while(<$s>){if(/Your IP/){s/^ *//;print s/<[^>]*>//gr;last}};close($s);'
 }
 
 get_country() {
