@@ -30,7 +30,7 @@ nc_u='\[\e[0;4m\]'
 
 
 
-export HISTCONTROL="ignoreboth"
+export HISTCONTROL="ignorespace:erasedups"
 export HISTIGNORE="h *:h"
 
 if [ "$(uname)" = "Darwin" ]; then
@@ -67,6 +67,15 @@ h() {
 f() {
 	find . -name "$1" -print -quit
 }
+
+z() {
+	if [ ! -d z ]; then
+		mkdir z || return
+	fi
+	mv "$@" z
+}
+
+hg () { history | grep $1; }
 
 esc_bs() {
 	echo $1 | sed 's#\\#\\\\#g'
@@ -132,7 +141,7 @@ Content-Length: $(wc -c $1 | cut -d\  -f 1)\r
 Content-Disposition: attachment; filename=\"$1\"\r
 ETag: \"1a2s3d4f\"\r
 Connection: close\r\n\r\n"
-	cat $1 ) | nc -l -p $port
+	cat $1 ) | nc -l $port
 }
 
 prompt_header() {
@@ -224,4 +233,15 @@ notify-aptitude-finished() {
 	done
 }
 
+docker-rm-exited() {
+	docker rm $(docker ps -a | awk '/Exited/ {printf $1" "}')
+}
+
+docker-rmi-unamed() {
+	docker rmi $(docker images | awk '$1=="<none>" {printf $3" "}')
+}
+
 export WINEDLLOVERRIDES='winemenubuilder.exe=d'
+export EDITOR=vim
+
+stty -ixon
