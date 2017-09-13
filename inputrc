@@ -1,0 +1,5 @@
+set colored-stats on
+#"\C-xr": "tmux send -t :.2 './gradlew bootRun' Enter"
+"\C-xb": "tmux send -t:.2 Enter; tmux send -t:.2 './gradlew build' Enter"
+"\C-xr": "tmux send -t:.2 Enter; if pgrep -f -q $(pwd); then tmux send -t:.2 C-c; else tmux send -t:.2 './gradlew bootRun' Enter; fi"
+"\C-xt": "tmux send -t:.2 Enter; tmux send -t:.2 './gradlew test --info' Enter"
