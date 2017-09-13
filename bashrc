@@ -39,7 +39,7 @@ if [ "$(uname)" = "Darwin" ]; then
 	alias ls="ls -G"
 fi
 
-alias cal="cal -3"
+#alias cal="cal -3"
 alias la="ls -la"
 alias ll="ls -l"
 alias lla="ls -la"
@@ -240,6 +240,8 @@ docker-rm-exited() {
 docker-rmi-unamed() {
 	docker rmi $(docker images | awk '$1=="<none>" {printf $3" "}')
 }
+
+cg() { cd $(git rev-parse --show-toplevel); }
 
 export WINEDLLOVERRIDES='winemenubuilder.exe=d'
 export EDITOR=vim
