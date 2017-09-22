@@ -68,6 +68,20 @@ f() {
 	find . -name "$1" -print -quit
 }
 
+z() {
+	if [ ! -d z ]; then
+		mkdir z || return
+	fi
+	mv "$@" z
+}
+
+gz() {
+	if [ ! -d z ]; then
+		mkdir z || return
+	fi
+	git mv "$@" z
+}
+
 esc_bs() {
 	echo $1 | sed 's#\\#\\\\#g'
 }
@@ -137,7 +151,7 @@ Connection: close\r\n\r\n"
 
 prompt_header() {
 	#[ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
-	cmd_num=$( date +%T )
+	cmd_num=$( date +%R )
 	git_string=$(git rev-parse --show-toplevel 2> /dev/null)
 	if [ ! -z "$git_string" ]; then
 		git_string="$(basename $git_string)"
