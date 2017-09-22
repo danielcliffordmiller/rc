@@ -158,8 +158,9 @@ prompt_header() {
 	cmd_num=$( date +%R )
 	git_string=$(git rev-parse --show-toplevel 2> /dev/null)
 	if [ ! -z "$git_string" ]; then
-		git_string="$(basename $git_string)"
-		git_string="$git_string:$(git branch | awk 'NF == 2 {print $2}')"
+		#-----
+		git_string="$(git branch | sed -n '/\*/p' | sed 's/\* \+//')"
+		#-----
 		#git_string="[$git_string]─"
 		faux_git_string="[$git_string]─"
 	else
