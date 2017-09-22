@@ -30,7 +30,7 @@ nc_u='\[\e[0;4m\]'
 
 
 
-export HISTCONTROL="ignoreboth"
+export HISTCONTROL="ignorespace:erasedups"
 export HISTIGNORE="h *:h"
 
 if [ "$(uname)" = "Darwin" ]; then
@@ -39,7 +39,8 @@ if [ "$(uname)" = "Darwin" ]; then
 	alias ls="ls -G"
 fi
 
-alias cal="cal -3"
+# cal on darwin causes issues
+[ "$(uname)" = "Linux" ] && alias cal="cal -3"
 alias la="ls -la"
 alias ll="ls -l"
 alias lla="ls -la"
@@ -81,6 +82,8 @@ gz() {
 	fi
 	git mv "$@" z
 }
+
+hg () { history | grep $1; }
 
 esc_bs() {
 	echo $1 | sed 's#\\#\\\\#g'
@@ -138,6 +141,7 @@ serv() {
 		echo -e "usage: serv $(rm_brace $nc_u)file$(rm_brace $nc) [$(rm_brace $nc_u)port$(rm_brace $nc)]"
 		return
 	fi
+	[ "$(uname)" = "Darwin" ] && opt="-p"
 	port=${2:-8080}
 	( echo -ne "HTTP/1.1 200 OK\r
 Content-Type: application/octet-stream\r
@@ -146,7 +150,7 @@ Content-Length: $(wc -c $1 | cut -d\  -f 1)\r
 Content-Disposition: attachment; filename=\"$1\"\r
 ETag: \"1a2s3d4f\"\r
 Connection: close\r\n\r\n"
-	cat $1 ) | nc -l -p $port
+	cat $1 ) | nc -l $opt $port
 }
 
 prompt_header() {
@@ -238,4 +242,18 @@ notify-aptitude-finished() {
 	done
 }
 
+docker-rm-exited() {
+	docker rm $(docker ps -a | awk '/Exited/ {printf $1" "}')
+}
+
+docker-rmi-unamed() {
+	docker rmi $(docker images | awk '$1=="<none>" {printf $3" "}')
+}
+
+cg() { cd $(git rev-parse --show-toplevel); }
+
 export WINEDLLOVERRIDES='winemenubuilder.exe=d'
+
+export EDITOR=vim
+
+stty -ixon
