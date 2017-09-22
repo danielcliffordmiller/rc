@@ -8,6 +8,13 @@ set relativenumber
 set hlsearch
 "set ts=4 sts=4 sw=4 noexpandtab
 
+set modelines=1
+
+set foldlevelstart=0
+set foldcolumn=1
+
+set laststatus=2
+
 nmap <F5> :! perl -c %
 nmap <F6> :! perl %
 nmap <F7> :! perl -d %
@@ -27,20 +34,30 @@ nnoremap <leader>b :! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew build' E
 nnoremap <leader>r :! tmux send -t:.2 Enter; if pgrep -f -q $(pwd); then tmux send -t:.2 C-c; else tmux send -t:.2 './gradlew bootRun' Enter; fi
 nnoremap <leader>t :! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew test --info' Enter
 
+" Vimscript autocmds ----------------------------{{{
 if has("autocmd")
+	" vimrc autocmds {{{
+	augroup filetype_vim
+		autocmd!
+		autocmd FileType vim setlocal foldmethod=marker
+	augroup END "}}}
+	" netrw autocmds {{{
 	augroup filetype_netrw
 		autocmd!
 		autocmd FileType netrw nunmap <buffer> <LeftMouse>
 		autocmd FileType netrw nmap <buffer> <2-LeftMouse> <Plug>NetrwLeftmouse
-	augroup END
+	augroup END "}}}
+	" yaml autocmds {{{
 	augroup filetype_yaml
 		autocmd!
 		autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2
 		autocmd BufRead ingress.yml,deployment.yml nnoremap <buffer> <leader>r :! kubectl apply -f %
-	augroup END
+	augroup END "}}}
+	" groovy autocmds {{{
 	augroup filetype_groovy
 		autocmd FileType groovy setlocal expandtab
-	augroup END
+	augroup END "}}}
+	" java autocmds {{{
 	augroup filetype_java
 		autocmd Filetype java setlocal omnifunc=javacomplete#Complete
 		autocmd!
@@ -49,14 +66,14 @@ if has("autocmd")
 		autocmd FileType java nnoremap <leader>C ^2x
         autocmd FileType java nnoremap <leader>s ^cwpublic voidldEepBbyiwvUisetf;i pa) { this.pa = pA }^2wf r(
         autocmd FileType java nnoremap <leader>g ^cwpublicwWyiwvUigetf;i() { return pA }
-	augroup END
+	augroup END "}}}
 	" augroup buffer_leave
 	" 	autocmd!
 	" 	autocmd BufRead * exe "normal :! tmux send -t:.2 'foobar';"
 	" augroup END
 " autocmd FileType java vnoremap <leader>c <esc>'<'>0I//<esc>
 " autocmd FileType java vnoremap <leader>C <esc>'<0'>0lx
-endif
+endif " }}}
 
 nnoremap <leader>ev :tabe ~/.vimrc
 nnoremap <leader>sv :source ~/.vimrc
