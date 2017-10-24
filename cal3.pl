@@ -8,7 +8,7 @@ my (undef, undef, undef, undef, $mon, $yr) = localtime;
 $mon = $ARGV[0] || $mon + 1;
 $yr = $ARGV[1] || $yr + 1900;
 
-# at this point, the month is zero-based, but the year is absolute
+# at this point, the month and the year are absolute
 
 my @cals = map {
 	[ `cal $_->[0], $_->[1]` ]
