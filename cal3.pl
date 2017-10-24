@@ -10,6 +10,8 @@ $yr = $ARGV[1] || $yr + 1900;
 
 # at this point, the month and the year are absolute
 
+die "invalid month '$mon'" if $mon < 1 || $mon > 12;
+
 my @cals = map {
 	[ `cal $_->[0], $_->[1]` ]
 } (
