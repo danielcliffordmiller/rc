@@ -6,6 +6,7 @@ set noexpandtab
 set ruler
 set relativenumber
 set hlsearch
+set incsearch
 "set ts=4 sts=4 sw=4 noexpandtab
 
 set modelines=1
@@ -29,10 +30,14 @@ let java_highlight_all=1
 
 let mapleader = ""
 
-nnoremap <leader>j :! tmux paste-buffer -t:1.3; tmux send -t:1.3 Enter
-nnoremap <leader>b :! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew build' Enter
-nnoremap <leader>r :! tmux send -t:.2 Enter; if pgrep -f -q $(pwd); then tmux send -t:.2 C-c; else tmux send -t:.2 './gradlew bootRun' Enter; fi
-nnoremap <leader>t :! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew test --info' Enter
+nnoremap <leader>h :nohlsearch<cr>
+
+nnoremap <leader>l :source %<cr>
+inoremap <leader>u viWUA
+nnoremap <leader>j :silent ! tmux paste-buffer -t:1.3; tmux send -t:1.3 Enter:redraw!
+nnoremap <leader>b :silent ! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew build' Enter:redraw!
+nnoremap <leader>r :silent ! tmux send -t:.2 Enter; if pgrep -f -q $(pwd); then tmux send -t:.2 C-c; else tmux send -t:.2 './gradlew bootRun' Enter; fi:redraw!
+nnoremap <leader>t :silent ! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew test --info' Enter:redraw!
 
 " Vimscript autocmds ----------------------------{{{
 if has("autocmd")
@@ -59,7 +64,7 @@ if has("autocmd")
 	augroup END "}}}
 	" java autocmds {{{
 	augroup filetype_java
-		autocmd Filetype java setlocal omnifunc=javacomplete#Complete
+		autocmd Filetype java set omnifunc=javacomplete#Complete
 		autocmd!
 		autocmd FileType java setlocal expandtab
 		autocmd FileType java nnoremap <leader>c I//<esc>
@@ -79,4 +84,3 @@ nnoremap <leader>ev :tabe ~/.vimrc
 nnoremap <leader>sv :source ~/.vimrc
 nnoremap <leader>o :set rnu mouse=n
 nnoremap <leader>O :set nornu mouse=
-
