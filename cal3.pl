@@ -36,5 +36,9 @@ for(my $i=0; $i < scalar @cals; $i++) {
 }
 
 foreach my $line (@lines) {
-	say join '', map { " ".sprintf("%-21s", $_) } @$line;
+	say join '', map {
+		my $r = " ".sprintf("%-21s", $_);
+		$r .= " " if index($r, $rev) > -1;
+		$r
+	} @$line;
 }
