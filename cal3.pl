@@ -19,7 +19,7 @@ die "invalid month '$mon'" if $mon < 1 || $mon > 12;
 
 my @cals = map {
 	my @cal = qx( cal $_->[0], $_->[1] );
-	map{s/$cur_day/$rev$cur_day$off/} @cal if $_->[0] == $cur_month && $_->[1] == $cur_year;
+	map{s/$cur_day/$rev$cur_day$off/ unless /$cur_year/} @cal if $_->[0] == $cur_month && $_->[1] == $cur_year;
 	foreach my $l (@cal) { chomp($l) }
 	[ @cal ];
 } (
