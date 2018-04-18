@@ -9,6 +9,8 @@ set hlsearch
 set incsearch
 "set ts=4 sts=4 sw=4 noexpandtab
 
+set cindent
+
 set backspace=indent,eol,start
 
 set noswapfile
@@ -44,6 +46,12 @@ inoremap <leader>u viWUA
 
 " Vimscript autocmds ----------------------------{{{
 if has("autocmd")
+    " perl autocmds {{{
+    augroup filetype_perl
+	autocmd!
+	autocmd FileType perl nnoremap <buffer> <leader>r :!perl %<cr>
+	autocmd FileType perl nnoremap <buffer> <leader>d :!perl -d %<cr>
+    augroup END "}}}
     " vimrc autocmds {{{
     augroup filetype_vim
 	autocmd!
