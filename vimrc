@@ -58,7 +58,7 @@ if has("autocmd")
     " yaml autocmds {{{
     augroup filetype_yaml
 	autocmd!
-	autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2
+	autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 	autocmd BufRead service.yml,ingress.yml,deployment.yml nnoremap <buffer> <leader>r :! kubectl apply -f %<cr>
     augroup END "}}}
     " json autocmd {{{
@@ -81,7 +81,7 @@ if has("autocmd")
     " java autocmds {{{
     augroup filetype_java
 	autocmd!
-	autocmd Filetype java set omnifunc=javacomplete#Complete
+	autocmd FileType java set omnifunc=javacomplete#Complete
 	autocmd FileType java setlocal expandtab
 	autocmd FileType java nnoremap <leader>c I//<esc>
 	autocmd FileType java nnoremap <leader>C ^2x
