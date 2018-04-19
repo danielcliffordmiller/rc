@@ -33,11 +33,12 @@ let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do scri
 let mapleader = ","
 
 let g:vrc_split_request_body = 1
-let g:vrc_trigger = '<leader>j'
+let g:vrc_trigger = '<leader>r'
 let g:vrc_set_default_mapping = 1
 
 nnoremap <tab> %
 vnoremap <tab> %
+onoremap <tab> %
 
 nnoremap <leader>h :nohlsearch<cr>
 
