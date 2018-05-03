@@ -9,7 +9,8 @@ set hlsearch
 set incsearch
 "set ts=4 sts=4 sw=4 noexpandtab
 
-set cindent
+" set cindent
+set smartindent
 
 set backspace=indent,eol,start
 
@@ -37,7 +38,7 @@ let g:vrc_trigger = '<leader>r'
 let g:vrc_set_default_mapping = 1
 
 nnoremap <tab> %
-vnoremap <tab> %
+xnoremap <tab> %
 onoremap <tab> %
 
 nnoremap <leader>h :nohlsearch<cr>
@@ -98,9 +99,9 @@ if has("autocmd")
 	autocmd FileType java setlocal expandtab
 	autocmd FileType java nnoremap <leader>c I//<esc>
 	autocmd FileType java nnoremap <leader>C ^2x
-	autocmd FileType java set suffixesadd=.java
-	autocmd FileType java set path+=src/main/java
+	autocmd FileType java set suffixesadd=.java path+=src/main/java
 	autocmd FileType java set includeexpr=substitute(v:fname,'\\.','/','g')
+	autocmd FileType java set foldmethod=syntax foldlevel=1
 	" autocmd FileType java set suffixesadd=.java
 	" autocmd FileType java set path+=src/main/java
 	" autocmd FileType java nnoremap <leader>s ^cwpublic voidldEepBbyiwvUisetf;i pa) { this.pa = pA }^2wf r(
