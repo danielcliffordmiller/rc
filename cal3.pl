@@ -22,7 +22,7 @@ my @cals = map {
     foreach my $l (@cal) {
 	chomp($l); $l .= ' 'x(21 - length($l));
     }
-    map{s/$cur_day/$rev$cur_day$off/ unless /$cur_year/} @cal if $_->[0] == $cur_month && $_->[1] == $cur_year;
+    map{s/\b$cur_day\b/$rev$cur_day$off/ unless /$cur_year/} @cal if $_->[0] == $cur_month && $_->[1] == $cur_year;
     [ @cal ];
 } (
     $mon == 1 ? [ 12, $yr - 1 ] : [ $mon - 1, $yr ],
