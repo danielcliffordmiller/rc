@@ -83,6 +83,7 @@ if has("autocmd")
     augroup filetype_javascript
 	autocmd FileType javascript nnoremap <buffer> <leader>r :! node %<cr>
 	autocmd FileType javascript nnoremap <buffer> <leader>d :! node inspect %<cr>
+	autocmd FileType javascript set sw=0 sts=0 ts=2
     augroup END "}}}
     " fugitive autocmds {{{
     augroup filetype_gitcommit
