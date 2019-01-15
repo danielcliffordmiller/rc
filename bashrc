@@ -251,11 +251,11 @@ notify-aptitude-finished() {
 }
 
 docker-rm-exited() {
-    docker rm $(docker ps -a | awk '/Exited/ {printf $1" "}')
+    docker ps -a | awk '/Exited/ {print $1}' | xargs docker rm
 }
 
 docker-rmi-unamed() {
-    docker rmi $(docker images | awk '$1=="<none>" {printf $3" "}')
+    docker images | awk '$1 == "<none>" {print $3}' | xargs docker rmi
 }
 
 cg() { cd $(git rev-parse --show-toplevel); }
