@@ -46,8 +46,6 @@ alias ll="ls -l"
 alias lla="ls -la"
 alias ltr="ls -ltr"
 
-alias vn="vim -c NERDTree"
-
 export CD_ROOT=/mnt/cdrom
 
 vd() {
