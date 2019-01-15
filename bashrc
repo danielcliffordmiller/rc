@@ -65,6 +65,9 @@ h() {
     } $1 !~ "#####" {print}'
 }
 
+alias hh="h 20"
+alias hhh="h 30"
+
 f() {
     find . -name "$1" -print -quit
 }
