@@ -40,7 +40,7 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # cal on darwin causes issues
-[ "$(uname)" = "Linux" ] && alias cal="cal -3"
+alias cal="cal -3"
 alias la="ls -la"
 alias ll="ls -l"
 alias lla="ls -la"
