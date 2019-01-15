@@ -19,7 +19,7 @@ set noswapfile
 set modelines=1
 
 set foldlevelstart=0
-set foldcolumn=1
+set foldcolumn=2
 
 set laststatus=2
 
@@ -123,3 +123,6 @@ nnoremap <leader>ev :tabe ~/.vimrc<cr>
 nnoremap <leader>sv :source ~/.vimrc<cr>
 nnoremap <leader>o :set rnu mouse=n<cr>
 nnoremap <leader>O :set nornu mouse=<cr>
+
+nnoremap <leader>/ :call <SID>gitGrep()<cr>
+nnoremap <leader>z :copen<cr>
