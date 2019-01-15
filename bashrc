@@ -162,7 +162,7 @@ Connection: close\r\n\r\n"
 
 prompt_header() {
     #[ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
-    cmd_num=$( date +%R )
+    let "cmd_num=$( jobs | wc -l )"
     git_string=$(git rev-parse --show-toplevel 2> /dev/null)
     if [ ! -z "$git_string" ]; then
 	#-----
@@ -183,7 +183,7 @@ prompt_header() {
 	#--- use this:
 	let chardiff=-chardiff
 	#ins="..."
-	ins="*"
+	ins="'"
 	#ndir=$dir
 	#ndir=$(echo $dir | sed 's#\(~\?/[^/]\+/\).*#\1#')
 	ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/4))}
@@ -202,9 +202,9 @@ prompt_header() {
     fi
 
     if (($UID)); then
-	proto_PS1="$black_hi$()───┤$green_hi ${USER} $blue_hi\h$nc:$blue_hi\$dir$black_hi ├─${dashes}($yellow_hi\$cmd_num$nc$black_hi)─\n \$$nc "
+	proto_PS1="$()───┤$green ${USER} $blue\$dir$nc ├─${dashes}($yellow\j$nc)─\n \$ "
 	if [ ! -z "$git_string" ]; then
-	    proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red_hi)$(esc_s "$git_string")$(esc_bs $black_hi)]\1(\2 /")
+	    proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red)$(esc_s "$git_string")$(esc_bs $nc)]\1(\2 /")
 	fi
 	export PS1="$proto_PS1"
     else
