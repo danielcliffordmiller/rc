@@ -41,10 +41,13 @@ fi
 
 # cal on darwin causes issues
 alias cal="cal -3"
+
 alias la="ls -la"
 alias ll="ls -l"
 alias lla="ls -la"
 alias ltr="ls -ltr"
+
+alias tree="tree.exp"
 
 export CD_ROOT=/mnt/cdrom
 
