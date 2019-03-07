@@ -28,10 +28,8 @@ white_hi='\[\e[0;97m\]'       # White
 # underlined colors
 nc_u='\[\e[0;4m\]'
 
-
-
 export HISTCONTROL="ignorespace:erasedups"
-export HISTIGNORE="h *:h"
+export HISTIGNORE="h *:h:history:hh:hhh:history *"
 
 if [ "$(uname)" = "Darwin" ]; then
     alias awk=gawk
