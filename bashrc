@@ -46,6 +46,7 @@ alias la="ls -la"
 alias ll="ls -l"
 alias lla="ls -la"
 alias ltr="ls -ltr"
+alias gl="git log --oneline"
 
 alias tree="tree.exp"
 
@@ -262,16 +263,6 @@ docker-rmi-unamed() {
 }
 
 cg() { cd $(git rev-parse --show-toplevel); }
-
-gl() {
-    local OPTIND
-    local n
-    if getopts "n:" param; then
-	n=$OPTARG
-	shift $((OPTIND-1))
-    fi
-    git log --pretty=oneline --decorate=short -n ${n:-10} $1
-}
 
 export WINEDLLOVERRIDES='winemenubuilder.exe=d'
 
