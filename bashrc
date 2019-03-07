@@ -57,14 +57,8 @@ vd() {
 h() {
     n=${1:-9}
     hist=$( history $n | sed -e 's/^[[:digit:] ]\{4\}[[:digit:]]/#####/' )
-    lines=$( echo "$hist" | sed -ne '/^#####/p' | wc -l )
-    let lines=$(echo $lines)
-    echo "$hist" | awk 'BEGIN {line='$lines'} $1 ~ "#####" {
-	printf("%5i  ", line--);
-	for(i=2; i<NF; i++)
-	    printf $i " ";
-	print $NF;
-    } $1 !~ "#####" {print}'
+    lines=$( echo "$hist" | grep -c '^#####' )
+    echo "$hist" | perl -pe 'BEGIN {$line='$lines'} s/^#{5}/sprintf("%5i",$line--)/e if /^#{5}/'
 }
 
 alias hh="h 20"
