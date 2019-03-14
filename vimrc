@@ -43,6 +43,9 @@ onoremap <tab> %
 
 nnoremap <leader>h :nohlsearch<cr>
 
+vnoremap * l`<y`>/"<cr>
+vnoremap # l`<y`>?"<cr>
+
 nnoremap <leader>l :source %<cr>
 inoremap <leader>u viWUA
 "nnoremap <leader>j :silent ! tmux paste-buffer -t:1.3; tmux send -t:1.3 Enter:redraw!
