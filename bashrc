@@ -45,6 +45,7 @@ alias ll="ls -l"
 alias lla="ls -la"
 alias ltr="ls -ltr"
 alias gl="git log --oneline"
+alias glg="git log --oneline --graph"
 
 alias tree="tree.exp"
 
