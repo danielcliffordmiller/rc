@@ -7,6 +7,7 @@ set ruler
 set relativenumber
 set hlsearch
 set incsearch
+set autoread
 "set ts=4 sts=4 sw=4 noexpandtab
 
 " set cindent
@@ -20,13 +21,14 @@ set modeline
 set modelines=1
 
 set foldlevelstart=0
-set foldcolumn=1
+set foldcolumn=2
 
 set laststatus=2
 
 set mouse=n
 
-let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/slime/start-swank.lisp\""'
+let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/bundle/slimv/slime/start-swank.lisp\""'
+" let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/slime/start-swank.lisp\""'
 
 " let java_highlight_java_lang_ids=1
 " let java_highlight_functions="style"
@@ -44,6 +46,9 @@ onoremap <tab> %
 
 nnoremap <leader>h :nohlsearch<cr>
 
+vnoremap * `>ly`</"<cr>
+vnoremap # `>ly`<?"<cr>
+
 nnoremap <leader>l :source %<cr>
 inoremap <leader>u viWUA
 "nnoremap <leader>j :silent ! tmux paste-buffer -t:1.3; tmux send -t:1.3 Enter:redraw!
@@ -51,11 +56,11 @@ inoremap <leader>u viWUA
 "nnoremap <leader>r :silent ! tmux send -t:.2 Enter; if pgrep -f -q $(pwd); then tmux send -t:.2 C-c; else tmux send -t:.2 './gradlew bootRun' Enter; fi:redraw!
 "nnoremap <leader>t :silent ! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew test --info' Enter:redraw!
 
-" Vimscript autocmds ----------------------------{{{
 if has("autocmd")
     " perl autocmds {{{
     augroup filetype_perl
 	autocmd!
+	autocmd FileType perl set expandtab
 	autocmd FileType perl nnoremap <buffer> <leader>r :!perl %<cr>
 	autocmd FileType perl nnoremap <buffer> <leader>d :!perl -d %<cr>
     augroup END "}}}
@@ -63,6 +68,7 @@ if has("autocmd")
     augroup filetype_vim
 	autocmd!
 	autocmd FileType vim setlocal foldmethod=marker
+	autocmd FileType vim setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab
     augroup END "}}}
     " netrw autocmds {{{
     augroup filetype_netrw
@@ -84,6 +90,7 @@ if has("autocmd")
     augroup filetype_javascript
 	autocmd FileType javascript nnoremap <buffer> <leader>r :! node %<cr>
 	autocmd FileType javascript nnoremap <buffer> <leader>d :! node inspect %<cr>
+	autocmd FileType javascript set sw=0 sts=0 ts=2 expandtab
     augroup END "}}}
     " fugitive autocmds {{{
     augroup filetype_gitcommit
@@ -93,6 +100,10 @@ if has("autocmd")
     augroup filetype_groovy
 	autocmd FileType groovy setlocal expandtab
     augroup END "}}}
+    " kotlin autocmds {{{
+    augroup filetype_kotlin
+	autocmd FileType kotlin setlocal expandtab
+    augroup END " }}}
     " java autocmds {{{
     augroup filetype_java
 	autocmd!
@@ -108,18 +119,43 @@ if has("autocmd")
 	" autocmd FileType java nnoremap <leader>s ^cwpublic voidldEepBbyiwvUisetf;i pa) { this.pa = pA }^2wf r(
 	" autocmd FileType java nnoremap <leader>g ^cwpublicwWyiwvUigetf;i() { return pA }
     augroup END "}}}
+    " build.gradle {{{
+    augroup build_gradle
+	autocmd BufRead build.gradle setlocal sts=2 sw=2 ts=2 expandtab
+    augroup END "}}}
     " augroup buffer_leave
     "    autocmd!
     "    autocmd BufRead * exe "normal :! tmux send -t:.2 'foobar';"
     " augroup END
 " autocmd FileType java vnoremap <leader>c <esc>'<'>0I//<esc>
 " autocmd FileType java vnoremap <leader>C <esc>'<0'>0lx
-endif " }}}
+endif
 
 set hidden
 
-nnoremap <leader>g :Gstatus<cr>
+nnoremap <leader>gs :Gstatus<cr>
+nnoremap <leader>gb :Gblame<cr>
+nnoremap <leader>gd :Gdiffsplit<cr>
 nnoremap <leader>ev :tabe ~/.vimrc<cr>
 nnoremap <leader>sv :source ~/.vimrc<cr>
 nnoremap <leader>o :set rnu mouse=n<cr>
 nnoremap <leader>O :set nornu mouse=<cr>
+
+nnoremap <leader>/ :call <SID>gitGrep()<cr>
+nnoremap <leader>z :copen<cr>
+
+set rtp+=~/.vim/bundle/Vundle.vim
+filetype off
+call vundle#begin()
+Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'danielcliffordmiller/vim-tmux-integration'
+Plugin 'danielcliffordmiller/vim-base64'
+Plugin 'vimwiki/vimwiki'
+Plugin 'ctrlpvim/ctrlp.vim.git'
+Plugin 'udalov/kotlin-vim'
+Plugin 'diepm/vim-rest-console.git'
+call vundle#end()
+filetype plugin indent on

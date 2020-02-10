@@ -28,10 +28,8 @@ white_hi='\[\e[0;97m\]'       # White
 # underlined colors
 nc_u='\[\e[0;4m\]'
 
-
-
 export HISTCONTROL="ignorespace:erasedups"
-export HISTIGNORE="h *:h"
+export HISTIGNORE="h *:h:history:hh:hhh:history *"
 
 if [ "$(uname)" = "Darwin" ]; then
     alias awk=gawk
@@ -40,13 +38,16 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # cal on darwin causes issues
-[ "$(uname)" = "Linux" ] && alias cal="cal -3"
+alias cal="cal -3"
+
 alias la="ls -la"
 alias ll="ls -l"
 alias lla="ls -la"
 alias ltr="ls -ltr"
+alias gl="git log --oneline"
+alias glg="git log --oneline --graph"
 
-alias vn="vim -c NERDTree"
+alias tree="tree.exp"
 
 export CD_ROOT=/mnt/cdrom
 
@@ -57,15 +58,12 @@ vd() {
 h() {
     n=${1:-9}
     hist=$( history $n | sed -e 's/^[[:digit:] ]\{4\}[[:digit:]]/#####/' )
-    lines=$( echo "$hist" | sed -ne '/^#####/p' | wc -l )
-    let lines=$(echo $lines)
-    echo "$hist" | awk 'BEGIN {line='$lines'} $1 ~ "#####" {
-	printf("%5i  ", line--);
-	for(i=2; i<NF; i++)
-	    printf $i " ";
-	print $NF;
-    } $1 !~ "#####" {print}'
+    lines=$( echo "$hist" | grep -c '^#####' )
+    echo "$hist" | perl -pe 'BEGIN {$line='$lines'} s/^#{5}/sprintf("%5i",$line--)/e if /^#{5}/'
 }
+
+alias hh="h 20"
+alias hhh="h 30"
 
 f() {
     find . -name "$1" -print -quit
@@ -161,7 +159,7 @@ Connection: close\r\n\r\n"
 
 prompt_header() {
     #[ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
-    cmd_num=$( date +%R )
+    let "cmd_num=$( jobs | wc -l )"
     git_string=$(git rev-parse --show-toplevel 2> /dev/null)
     if [ ! -z "$git_string" ]; then
 	#-----
@@ -182,7 +180,7 @@ prompt_header() {
 	#--- use this:
 	let chardiff=-chardiff
 	#ins="..."
-	ins="*"
+	ins="'"
 	#ndir=$dir
 	#ndir=$(echo $dir | sed 's#\(~\?/[^/]\+/\).*#\1#')
 	ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/4))}
@@ -201,9 +199,9 @@ prompt_header() {
     fi
 
     if (($UID)); then
-	proto_PS1="$black_hi$()───┤$green_hi ${USER} $blue_hi\h$nc:$blue_hi\$dir$black_hi ├─${dashes}($yellow_hi\$cmd_num$nc$black_hi)─\n \$$nc "
+	proto_PS1="$()───┤$green ${USER} $blue\$dir$nc ├─${dashes}($yellow\j$nc)─\n \$ "
 	if [ ! -z "$git_string" ]; then
-	    proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red_hi)$(esc_s "$git_string")$(esc_bs $black_hi)]\1(\2 /")
+	    proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red)$(esc_s "$git_string")$(esc_bs $nc)]\1(\2 /")
 	fi
 	export PS1="$proto_PS1"
     else
@@ -250,24 +248,14 @@ notify-aptitude-finished() {
 }
 
 docker-rm-exited() {
-    docker rm $(docker ps -a | awk '/Exited/ {printf $1" "}')
+    docker ps -a | awk '/Exited/ {print $1}' | xargs docker rm
 }
 
 docker-rmi-unamed() {
-    docker rmi $(docker images | awk '$1=="<none>" {printf $3" "}')
+    docker images | awk '$1 == "<none>" {print $3}' | xargs docker rmi
 }
 
 cg() { cd $(git rev-parse --show-toplevel); }
-
-gl() {
-    local OPTIND
-    local n
-    if getopts "n:" param; then
-	n=$OPTARG
-	shift $((OPTIND-1))
-    fi
-    git log --pretty=oneline --decorate=short -n ${n:-10} $1
-}
 
 export WINEDLLOVERRIDES='winemenubuilder.exe=d'
 

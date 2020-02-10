@@ -1,0 +1,14 @@
+#!/usr/bin/env expect --
+
+spawn -noecho tree {*}$argv
+
+log_user 0
+
+expect {
+    "^└── "           { send_user "└─ "; exp_continue }
+    "^├── "           { send_user "├─ "; exp_continue }
+    "^│   "           { send_user "│  "; exp_continue }
+    "^    "           { send_user "   "; exp_continue }
+    -re "^\[^├│└]+\n" { send_user -- "$expect_out(0,string)"; exp_continue }
+    eof               { exit }
+}
