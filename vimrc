@@ -16,6 +16,7 @@ set backspace=indent,eol,start
 
 set noswapfile
 
+set modeline
 set modelines=1
 
 set foldlevelstart=0
