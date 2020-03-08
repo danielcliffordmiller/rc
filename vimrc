@@ -21,14 +21,19 @@ set modeline
 set modelines=1
 
 set foldlevelstart=0
-set foldcolumn=2
 
 set laststatus=2
 
 set mouse=n
 
-let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/bundle/slimv/slime/start-swank.lisp\""'
-" let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/slime/start-swank.lisp\""'
+set background=dark
+
+if has("osx")
+  let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/bundle/slimv/slime/start-swank.lisp\""'
+elseif has("linux")
+  let g:slimv_swank_cmd = '! xfce4-terminal -e "sbcl --load /home/danmiller/.vim/slime/start-swank.lisp" &'
+endif
+let g:slimv_repl_split = 3
 
 " let java_highlight_java_lang_ids=1
 " let java_highlight_functions="style"

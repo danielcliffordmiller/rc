@@ -199,9 +199,30 @@ prompt_header() {
     fi
 
     if (($UID)); then
-        proto_PS1="$()───┤$green ${USER} $blue\$dir$nc ├─${dashes}($yellow\j$nc)─\n \$ "
+        # colors
+        case "$(uname)" in
+            Linux)
+                username_c="$green_b"
+                dir_c="$blue_b"
+                hostname_c="$blue_b"
+                bar_c="$nc"
+                git_c="$red_b"
+                job_c="$yellow_b"
+                hostname_t="$HOSTNAME$white_b:"
+                ;;
+            *)
+                username_c="$green"
+                dir_c="$blue"
+                bar_c="$nc"
+                git_c="$red"
+                job_c="$yellow"
+                hostname_t=""
+                ;;
+        esac
+
+        proto_PS1="$()$bar_c───┤$username_c ${USER} $hostname_c$hostname_t$dir_c\$dir$bar_c ├─${dashes}($job_c\j$bar_c)─\n \$ "
         if [ ! -z "$git_string" ]; then
-            proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red)$(esc_s "$git_string")$(esc_bs $nc)]\1(\2 /")
+            proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $git_c)$(esc_s "$git_string")$(esc_bs $nc)]\1(\2 /")
         fi
         export PS1="$proto_PS1"
     else
