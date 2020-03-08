@@ -18,12 +18,12 @@ cyan_b='\[\e[1;36m\]'
 white_b='\[\e[1;37m\]'
 # high intensty colors
 black_hi='\[\e[0;90m\]'       # Black
-red_hi='\[\e[0;91m\]'	 # Red
+red_hi='\[\e[0;91m\]'         # Red
 green_hi='\[\e[0;92m\]'       # Green
 yellow_hi='\[\e[0;93m\]'      # Yellow
-blue_hi='\[\e[0;94m\]'	# Blue
+blue_hi='\[\e[0;94m\]'        # Blue
 purple_hi='\[\e[0;95m\]'      # Purple
-cyan_hi='\[\e[0;96m\]'	# Cyan
+cyan_hi='\[\e[0;96m\]'        # Cyan
 white_hi='\[\e[0;97m\]'       # White
 # underlined colors
 nc_u='\[\e[0;4m\]'
@@ -71,14 +71,14 @@ f() {
 
 z() {
     if [ ! -d z ]; then
-	mkdir z || return
+        mkdir z || return
     fi
     mv "$@" z
 }
 
 gz() {
     if [ ! -d z ]; then
-	mkdir z || return
+        mkdir z || return
     fi
     git mv "$@" z
 }
@@ -113,28 +113,28 @@ User-Agent: Mozilla/5.0\r\n\r\n" >&9
 }
 ice-add() {
     if [ $# != 1 ]; then
-	echo "usage:  ice-add [program name]"
-	return
+        echo "usage:  ice-add [program name]"
+        return
     fi
     directory="~/.icewm/menu_files/"
     PS3="select program group: "
     select group in `ls $directory`; do
-	break
+        break
     done
 }
 ice_icon() {
     if [ $# != 2 ]; then
-	echo "usage:  ice_icons [program name] [picture name]"
-	return
+        echo "usage:  ice_icons [program name] [picture name]"
+        return
     fi
 
     if [ ! -e $2 ]; then
-	echo "$2 not found"
-	return
+        echo "$2 not found"
+        return
     fi
 
     for i in 16 32 48; do
-	convert $2 -scale ${i}x$i ~/.icewm/icons/${1}_${i}x${i}.xpm
+        convert $2 -scale ${i}x$i ~/.icewm/icons/${1}_${i}x${i}.xpm
     done
     echo "Success! :)"
     rm -i $2
@@ -142,8 +142,8 @@ ice_icon() {
 
 serv() {
     if [ $# -ne 1 ] && [ $# -ne 2 ]; then
-	echo -e "usage: serv $(rm_brace $nc_u)file$(rm_brace $nc) [$(rm_brace $nc_u)port$(rm_brace $nc)]"
-	return
+        echo -e "usage: serv $(rm_brace $nc_u)file$(rm_brace $nc) [$(rm_brace $nc_u)port$(rm_brace $nc)]"
+        return
     fi
     [ "$(uname)" = "Darwin" ] && opt="-p"
     port=${2:-8080}
@@ -162,13 +162,13 @@ prompt_header() {
     let "cmd_num=$( jobs | wc -l )"
     git_string=$(git rev-parse --show-toplevel 2> /dev/null)
     if [ ! -z "$git_string" ]; then
-	#-----
-	git_string="$(git branch | sed -n '/\*/p' | sed 's/\* \+//')"
-	#-----
-	#git_string="[$git_string]─"
-	faux_git_string="[$git_string]─"
+        #-----
+        git_string="$(git branch | sed -n '/\*/p' | sed 's/\* \+//')"
+        #-----
+        #git_string="[$git_string]─"
+        faux_git_string="[$git_string]─"
     else
-	faux_git_string=""
+        faux_git_string=""
     fi
     dir=`echo $PWD | sed "s#$HOME#~#"`
     termsize=$(tput cols)
@@ -177,36 +177,36 @@ prompt_header() {
     let chardiff=$termsize-$numchars
     dashes=""
     if [ $chardiff -lt 0 ]; then
-	#--- use this:
-	let chardiff=-chardiff
-	#ins="..."
-	ins="'"
-	#ndir=$dir
-	#ndir=$(echo $dir | sed 's#\(~\?/[^/]\+/\).*#\1#')
-	ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/4))}
-	#ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/2))}
-	ndir=$ndir$ins
-	ndir=$ndir${dir:$((${#ndir}+$chardiff))}
-	dir=$ndir
-	#--- or use this:
-	#dir=$ins${dir:$(($numchars-$termsize+${#ins}))}
+        #--- use this:
+        let chardiff=-chardiff
+        #ins="..."
+        ins="'"
+        #ndir=$dir
+        #ndir=$(echo $dir | sed 's#\(~\?/[^/]\+/\).*#\1#')
+        ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/4))}
+        #ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/2))}
+        ndir=$ndir$ins
+        ndir=$ndir${dir:$((${#ndir}+$chardiff))}
+        dir=$ndir
+        #--- or use this:
+        #dir=$ins${dir:$(($numchars-$termsize+${#ins}))}
     else
-	i=1
-	while [ $i -le $chardiff ]; do
-	    dashes="─$dashes"
-	    let i++
-	done
+        i=1
+        while [ $i -le $chardiff ]; do
+            dashes="─$dashes"
+            let i++
+        done
     fi
 
     if (($UID)); then
-	proto_PS1="$()───┤$green ${USER} $blue\$dir$nc ├─${dashes}($yellow\j$nc)─\n \$ "
-	if [ ! -z "$git_string" ]; then
-	    proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red)$(esc_s "$git_string")$(esc_bs $nc)]\1(\2 /")
-	fi
-	export PS1="$proto_PS1"
+        proto_PS1="$()───┤$green ${USER} $blue\$dir$nc ├─${dashes}($yellow\j$nc)─\n \$ "
+        if [ ! -z "$git_string" ]; then
+            proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $red)$(esc_s "$git_string")$(esc_bs $nc)]\1(\2 /")
+        fi
+        export PS1="$proto_PS1"
     else
-	unset PROMPT_COMMAND
-	export PS1="$red_b\u $blue_b\h$nc:$blue_b\W $nc${black_hi}\\$ $nc"
+        unset PROMPT_COMMAND
+        export PS1="$red_b\u $blue_b\h$nc:$blue_b\W $nc${black_hi}\\$ $nc"
     fi
 }
 #print_tty() {
@@ -220,19 +220,19 @@ export PROMPT_COMMAND="prompt_header"
 
 lowercase() {
     for file; do
-	filename=${file##*/}
-	case "$filename" in
-	    */*) dirname==${file%/*} ;;
-	    *)    dirname=.;;
-	esac
-	nf=$(echo $filename | tr A-Z a-z)
-	newname="${dirname}/${nf}"
-	if [ "$nf" != "$filename" ]; then
-	    mv "$file" "$newname"
-	    echo "lowercase: $file --> $newname"
-	else
-	    echo "lowercase: $file not changed."
-	fi
+        filename=${file##*/}
+        case "$filename" in
+            */*) dirname==${file%/*} ;;
+            *)    dirname=.;;
+        esac
+        nf=$(echo $filename | tr A-Z a-z)
+        newname="${dirname}/${nf}"
+        if [ "$nf" != "$filename" ]; then
+            mv "$file" "$newname"
+            echo "lowercase: $file --> $newname"
+        else
+            echo "lowercase: $file not changed."
+        fi
     done
 }
 make_keys() {
@@ -240,10 +240,10 @@ make_keys() {
 }
 notify-aptitude-finished() {
     while true; do
-	if [ -z "$(pgrep aptitude)" ]; then
-	    notify-send "Aptitude is finished"
-	    break
-	fi
+        if [ -z "$(pgrep aptitude)" ]; then
+            notify-send "Aptitude is finished"
+            break
+        fi
     done
 }
 

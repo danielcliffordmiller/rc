@@ -57,76 +57,76 @@ inoremap <leader>u viWUA
 "nnoremap <leader>t :silent ! tmux send -t:.2 Enter; tmux send -t:.2 './gradlew test --info' Enter:redraw!
 
 if has("autocmd")
-    " perl autocmds {{{
-    augroup filetype_perl
-	autocmd!
-	autocmd FileType perl set expandtab
-	autocmd FileType perl nnoremap <buffer> <leader>r :!perl %<cr>
-	autocmd FileType perl nnoremap <buffer> <leader>d :!perl -d %<cr>
-    augroup END "}}}
-    " vimrc autocmds {{{
-    augroup filetype_vim
-	autocmd!
-	autocmd FileType vim setlocal foldmethod=marker
-	autocmd FileType vim setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab
-    augroup END "}}}
-    " netrw autocmds {{{
-    augroup filetype_netrw
-	autocmd!
-	autocmd FileType netrw nunmap <buffer> <LeftMouse>
-	autocmd FileType netrw nmap <buffer> <2-LeftMouse> <Plug>NetrwLeftmouse
-    augroup END "}}}
-    " yaml autocmds {{{
-    augroup filetype_yaml
-	autocmd!
-	autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-	autocmd BufRead service.yml,ingress.yml,deployment.yml nnoremap <buffer> <leader>r :! kubectl apply -f %<cr>
-    augroup END "}}}
-    " json autocmd {{{
-    augroup filetype_json
-	autocmd FileType json set expandtab
-    augroup END "}}}
-    " javascript autocmds {{{
-    augroup filetype_javascript
-	autocmd FileType javascript nnoremap <buffer> <leader>r :! node %<cr>
-	autocmd FileType javascript nnoremap <buffer> <leader>d :! node inspect %<cr>
-	autocmd FileType javascript set sw=0 sts=0 ts=2 expandtab
-    augroup END "}}}
-    " fugitive autocmds {{{
-    augroup filetype_gitcommit
-	"autocmd FileType gitcommit nnoremap <buffer> dc :Gdiff --cached<cr>
-    augroup END "}}}
-    " groovy autocmds {{{
-    augroup filetype_groovy
-	autocmd FileType groovy setlocal expandtab
-    augroup END "}}}
-    " kotlin autocmds {{{
-    augroup filetype_kotlin
-	autocmd FileType kotlin setlocal expandtab
-    augroup END " }}}
-    " java autocmds {{{
-    augroup filetype_java
-	autocmd!
-	autocmd FileType java set omnifunc=javacomplete#Complete
-	autocmd FileType java setlocal expandtab
-	autocmd FileType java nnoremap <leader>c I//<esc>
-	autocmd FileType java nnoremap <leader>C ^2x
-	autocmd FileType java set suffixesadd=.java path+=src/main/java
-	autocmd FileType java set includeexpr=substitute(v:fname,'\\.','/','g')
-	autocmd FileType java set foldmethod=syntax foldlevel=1
-	" autocmd FileType java set suffixesadd=.java
-	" autocmd FileType java set path+=src/main/java
-	" autocmd FileType java nnoremap <leader>s ^cwpublic voidldEepBbyiwvUisetf;i pa) { this.pa = pA }^2wf r(
-	" autocmd FileType java nnoremap <leader>g ^cwpublicwWyiwvUigetf;i() { return pA }
-    augroup END "}}}
-    " build.gradle {{{
-    augroup build_gradle
-	autocmd BufRead build.gradle setlocal sts=2 sw=2 ts=2 expandtab
-    augroup END "}}}
-    " augroup buffer_leave
-    "    autocmd!
-    "    autocmd BufRead * exe "normal :! tmux send -t:.2 'foobar';"
-    " augroup END
+  " perl autocmds {{{
+  augroup filetype_perl
+    autocmd!
+    autocmd FileType perl set expandtab
+    autocmd FileType perl nnoremap <buffer> <leader>r :!perl %<cr>
+    autocmd FileType perl nnoremap <buffer> <leader>d :!perl -d %<cr>
+  augroup END "}}}
+  " vimrc autocmds {{{
+  augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+    autocmd FileType vim setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab
+  augroup END "}}}
+  " netrw autocmds {{{
+  augroup filetype_netrw
+    autocmd!
+    autocmd FileType netrw nunmap <buffer> <LeftMouse>
+    autocmd FileType netrw nmap <buffer> <2-LeftMouse> <Plug>NetrwLeftmouse
+  augroup END "}}}
+  " yaml autocmds {{{
+  augroup filetype_yaml
+    autocmd!
+    autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd BufRead service.yml,ingress.yml,deployment.yml nnoremap <buffer> <leader>r :! kubectl apply -f %<cr>
+  augroup END "}}}
+  " json autocmd {{{
+  augroup filetype_json
+    autocmd FileType json set expandtab
+  augroup END "}}}
+  " javascript autocmds {{{
+  augroup filetype_javascript
+    autocmd FileType javascript nnoremap <buffer> <leader>r :! node %<cr>
+    autocmd FileType javascript nnoremap <buffer> <leader>d :! node inspect %<cr>
+    autocmd FileType javascript set sw=0 sts=0 ts=2 expandtab
+  augroup END "}}}
+  " fugitive autocmds {{{
+  augroup filetype_gitcommit
+    "autocmd FileType gitcommit nnoremap <buffer> dc :Gdiff --cached<cr>
+  augroup END "}}}
+  " groovy autocmds {{{
+  augroup filetype_groovy
+    autocmd FileType groovy setlocal expandtab
+  augroup END "}}}
+  " kotlin autocmds {{{
+  augroup filetype_kotlin
+    autocmd FileType kotlin setlocal expandtab
+  augroup END " }}}
+  " java autocmds {{{
+  augroup filetype_java
+    autocmd!
+    autocmd FileType java set omnifunc=javacomplete#Complete
+    autocmd FileType java setlocal expandtab
+    autocmd FileType java nnoremap <leader>c I//<esc>
+    autocmd FileType java nnoremap <leader>C ^2x
+    autocmd FileType java set suffixesadd=.java path+=src/main/java
+    autocmd FileType java set includeexpr=substitute(v:fname,'\\.','/','g')
+    autocmd FileType java set foldmethod=syntax foldlevel=1
+    " autocmd FileType java set suffixesadd=.java
+    " autocmd FileType java set path+=src/main/java
+    " autocmd FileType java nnoremap <leader>s ^cwpublic voidldEepBbyiwvUisetf;i pa) { this.pa = pA }^2wf r(
+    " autocmd FileType java nnoremap <leader>g ^cwpublicwWyiwvUigetf;i() { return pA }
+  augroup END "}}}
+  " build.gradle {{{
+  augroup build_gradle
+    autocmd BufRead build.gradle setlocal sts=2 sw=2 ts=2 expandtab
+  augroup END "}}}
+  " augroup buffer_leave
+  "  autocmd!
+  "  autocmd BufRead * exe "normal :! tmux send -t:.2 'foobar';"
+  " augroup END
 " autocmd FileType java vnoremap <leader>c <esc>'<'>0I//<esc>
 " autocmd FileType java vnoremap <leader>C <esc>'<0'>0lx
 endif
