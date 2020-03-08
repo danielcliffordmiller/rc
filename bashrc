@@ -220,9 +220,9 @@ prompt_header() {
                 ;;
         esac
 
-        proto_PS1="$()$bar_c───┤$username_c ${USER} $hostname_c$hostname_t$dir_c\$dir$bar_c ├─${dashes}($job_c\j$bar_c)─\n \$ "
+        proto_PS1="$()$bar_c───┤$username_c ${USER} $hostname_c$hostname_t$dir_c\$dir$bar_c ├─${dashes}($job_c\j$bar_c)─\n \$$nc "
         if [ ! -z "$git_string" ]; then
-            proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $git_c)$(esc_s "$git_string")$(esc_bs $nc)]\1(\2 /")
+            proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $git_c)$(esc_s "$git_string")$(esc_bs $bar_c)]\1(\2 /")
         fi
         export PS1="$proto_PS1"
     else
