@@ -1,0 +1,42 @@
+
+ps_hostname=true
+
+username_c="$green_b"
+dir_c="$blue_b"
+hostname_c="$blue_b"
+bar_c="$nc"
+git_c="$red_b"
+job_c="$yellow_b"
+hostname_t="${HOSTNAME%%.*}$white_b:"
+
+ice-add() {
+    if [ $# != 1 ]; then
+        echo "usage:  ice-add [program name]"
+        return
+    fi
+    directory="~/.icewm/menu_files/"
+    PS3="select program group: "
+    select group in `ls $directory`; do
+        break
+    done
+}
+
+ice-icon() {
+    if [ $# != 2 ]; then
+        echo "usage:  ice_icons [program name] [picture name]"
+        return
+    fi
+
+    if [ ! -e $2 ]; then
+        echo "$2 not found"
+        return
+    fi
+
+    for i in 16 32 48; do
+        convert $2 -scale ${i}x$i ~/.icewm/icons/${1}_${i}x${i}.xpm
+    done
+    echo "Success! :)"
+    rm -i $2
+}
+
+# vim: filetype=sh

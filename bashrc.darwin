@@ -1,0 +1,15 @@
+
+ps_hostname=false
+
+username_c="$green"
+dir_c="$blue"
+bar_c="$nc"
+git_c="$red"
+job_c="$yellow"
+hostname_t=""
+
+alias awk=gawk
+alias sed=gsed
+alias ls="ls -G"
+
+# vim: filetype=sh

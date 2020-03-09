@@ -28,25 +28,16 @@ white_hi='\[\e[0;97m\]'       # White
 # underlined colors
 nc_u='\[\e[0;4m\]'
 
-case "$(uname)" in
-    Linux)
-        ps_hostname=true
-        ;;
-    Darwin)
-        ps_hostname=false
-        ;;
-esac
+
+working_dir="${BASH_SOURCE[0]%/*}"
+os_name="$(uname | tr '[:upper:]' '[:lower:]')"
+os_config_file="$working_dir/bashrc.$os_name"
+
+eval "$(cat $os_config_file)"
 
 export HISTCONTROL="ignorespace:erasedups"
 export HISTIGNORE="h *:h:history:hh:hhh:history *"
 
-if [ "$(uname)" = "Darwin" ]; then
-    alias awk=gawk
-    alias sed=gsed
-    alias ls="ls -G"
-fi
-
-# cal on darwin causes issues
 alias cal="cal -3"
 
 alias la="ls -la"
@@ -70,7 +61,6 @@ h() {
     lines=$( echo "$hist" | grep -c '^#####' )
     echo "$hist" | perl -pe 'BEGIN {$line='$lines'} s/^#{5}/sprintf("%5i",$line--)/e if /^#{5}/'
 }
-
 alias hh="h 20"
 alias hhh="h 30"
 
@@ -120,34 +110,6 @@ User-Agent: Mozilla/5.0\r\n\r\n" >&9
     exec 9>&-
     exec 9<&-
 }
-ice-add() {
-    if [ $# != 1 ]; then
-        echo "usage:  ice-add [program name]"
-        return
-    fi
-    directory="~/.icewm/menu_files/"
-    PS3="select program group: "
-    select group in `ls $directory`; do
-        break
-    done
-}
-ice_icon() {
-    if [ $# != 2 ]; then
-        echo "usage:  ice_icons [program name] [picture name]"
-        return
-    fi
-
-    if [ ! -e $2 ]; then
-        echo "$2 not found"
-        return
-    fi
-
-    for i in 16 32 48; do
-        convert $2 -scale ${i}x$i ~/.icewm/icons/${1}_${i}x${i}.xpm
-    done
-    echo "Success! :)"
-    rm -i $2
-}
 
 serv() {
     if [ $# -ne 1 ] && [ $# -ne 2 ]; then
@@ -161,20 +123,17 @@ Content-Type: application/octet-stream\r
 Connection: Keep-Alive\r
 Content-Length: $(wc -c $1 | cut -d\  -f 1)\r
 Content-Disposition: attachment; filename=\"$1\"\r
-ETag: \"1a2s3d4f\"\r
 Connection: close\r\n\r\n"
     cat $1 ) | nc -l $opt $port
 }
 
 prompt_header() {
-    #[ $cmd_num ] && let cmd_num++; let ${cmd_num:=0}
     let "cmd_num=$( jobs | wc -l )"
     git_string=$(git rev-parse --show-toplevel 2> /dev/null)
     if [ ! -z "$git_string" ]; then
         #-----
         git_string="$(git branch | sed -n '/\*/p' | sed 's/\* \+//')"
         #-----
-        #git_string="[$git_string]─"
         faux_git_string="[$git_string]─"
     else
         faux_git_string=""
@@ -191,19 +150,13 @@ prompt_header() {
     let chardiff=$termsize-$numchars
     dashes=""
     if [ $chardiff -lt 0 ]; then
-        #--- use this:
         let chardiff=-chardiff
         #ins="..."
         ins="'"
-        #ndir=$dir
-        #ndir=$(echo $dir | sed 's#\(~\?/[^/]\+/\).*#\1#')
         ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/4))}
-        #ndir=${dir:0:$(((${#dir}-$chardiff-${#ins})/2))}
         ndir=$ndir$ins
         ndir=$ndir${dir:$((${#ndir}+$chardiff))}
         dir=$ndir
-        #--- or use this:
-        #dir=$ins${dir:$(($numchars-$termsize+${#ins}))}
     else
         i=1
         while [ $i -le $chardiff ]; do
@@ -213,26 +166,6 @@ prompt_header() {
     fi
 
     if (($UID)); then
-        # colors
-        case "$(uname)" in
-            Linux)
-                username_c="$green_b"
-                dir_c="$blue_b"
-                hostname_c="$blue_b"
-                bar_c="$nc"
-                git_c="$red_b"
-                job_c="$yellow_b"
-                hostname_t="$HOSTNAME$white_b:"
-                ;;
-            Darwin)
-                username_c="$green"
-                dir_c="$blue"
-                bar_c="$nc"
-                git_c="$red"
-                job_c="$yellow"
-                hostname_t=""
-                ;;
-        esac
 
         if [ ! "$($ps_hostname)" ]; then
             hostname_t=""
