@@ -31,7 +31,11 @@ set background=dark
 if has("osx")
   let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/bundle/slimv/slime/start-swank.lisp\""'
 elseif has("linux")
-  let g:slimv_swank_cmd = '! xfce4-terminal -e "sbcl --load /home/danmiller/.vim/slime/start-swank.lisp" &'
+  if hostname() ==# 'augustus'
+    let g:slimv_swank_cmd = '!tmux new-window "sbcl --load ~/.vim//bundle/slimv/slime/start-swank.lisp"'
+  else
+    let g:slimv_swank_cmd = '! xfce4-terminal -e "sbcl --load /home/danmiller/.vim/slime/start-swank.lisp" &'
+  endif
 endif
 let g:slimv_repl_split = 3
 
@@ -158,9 +162,11 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'danielcliffordmiller/vim-tmux-integration'
 Plugin 'danielcliffordmiller/vim-base64'
+Plugin 'kovisoft/slimv.git'
 Plugin 'vimwiki/vimwiki'
 Plugin 'ctrlpvim/ctrlp.vim.git'
 Plugin 'udalov/kotlin-vim'
 Plugin 'diepm/vim-rest-console.git'
+Plugin 'chr4/nginx.vim'
 call vundle#end()
 filetype plugin indent on
