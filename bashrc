@@ -6,7 +6,7 @@ blue='\[\e[0;34m\]'
 purple='\[\e[0;35m\]'
 cyan='\[\e[0;36m\]'
 gray='\[\e[0;37m\]'
-nc='\[\e[0m\]' 
+nc='\[\e[0m\]'
 # bold colors
 black_b='\[\e[1;30m\]'
 red_b='\[\e[1;31m\]'
@@ -27,6 +27,15 @@ cyan_hi='\[\e[0;96m\]'        # Cyan
 white_hi='\[\e[0;97m\]'       # White
 # underlined colors
 nc_u='\[\e[0;4m\]'
+
+case "$(uname)" in
+    Linux)
+        ps_hostname=true
+        ;;
+    Darwin)
+        ps_hostname=false
+        ;;
+esac
 
 export HISTCONTROL="ignorespace:erasedups"
 export HISTIGNORE="h *:h:history:hh:hhh:history *"
@@ -172,7 +181,12 @@ prompt_header() {
     fi
     dir=`echo $PWD | sed "s#$HOME#~#"`
     termsize=$(tput cols)
-    prompt_string="---| ${USER} ${HOSTNAME%%.*}:$dir |-$faux_git_string($cmd_num)-"
+    if [ "$($ps_hostname)" ]; then
+        hostname="${HOSTNAME%%.*}:"
+    else
+        hostname=""
+    fi
+    prompt_string="---| ${USER} $hostname$dir |-$faux_git_string($cmd_num)-"
     numchars=${#prompt_string}
     let chardiff=$termsize-$numchars
     dashes=""
@@ -210,7 +224,7 @@ prompt_header() {
                 job_c="$yellow_b"
                 hostname_t="$HOSTNAME$white_b:"
                 ;;
-            *)
+            Darwin)
                 username_c="$green"
                 dir_c="$blue"
                 bar_c="$nc"
@@ -220,7 +234,11 @@ prompt_header() {
                 ;;
         esac
 
-        proto_PS1="$()$bar_c───┤$username_c ${USER} $hostname_c$hostname_t$dir_c\$dir$bar_c ├─${dashes}($job_c\j$bar_c)─\n \$$nc "
+        if [ ! "$($ps_hostname)" ]; then
+            hostname_t=""
+        fi
+
+        proto_PS1="$bar_c$()───┤$username_c ${USER} $hostname_c$hostname_t$dir_c\$dir$bar_c ├─${dashes}($job_c\j$bar_c)─\n \$$nc "
         if [ ! -z "$git_string" ]; then
             proto_PS1=$(echo $proto_PS1 | sed "s/\(.\)(\([^(]*\)$/─[$(esc_bs $git_c)$(esc_s "$git_string")$(esc_bs $bar_c)]\1(\2 /")
         fi
