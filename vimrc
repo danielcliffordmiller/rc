@@ -76,11 +76,11 @@ if has("autocmd")
     autocmd FileType vim setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab
   augroup END "}}}
   " netrw autocmds {{{
-  augroup filetype_netrw
-    autocmd!
-    autocmd FileType netrw nunmap <buffer> <LeftMouse>
-    autocmd FileType netrw nmap <buffer> <2-LeftMouse> <Plug>NetrwLeftmouse
-  augroup END "}}}
+  "augroup filetype_netrw
+  "  autocmd!
+  "  autocmd FileType netrw nunmap <buffer> <LeftMouse>
+  "  autocmd FileType netrw nmap <buffer> <2-LeftMouse> <Plug>NetrwLeftmouse
+  "augroup END "}}}
   " yaml autocmds {{{
   augroup filetype_yaml
     autocmd!
@@ -89,10 +89,12 @@ if has("autocmd")
   augroup END "}}}
   " json autocmd {{{
   augroup filetype_json
+    autocmd!
     autocmd FileType json set expandtab
   augroup END "}}}
   " javascript autocmds {{{
   augroup filetype_javascript
+    autocmd!
     autocmd FileType javascript nnoremap <buffer> <leader>r :! node %<cr>
     autocmd FileType javascript nnoremap <buffer> <leader>d :! node inspect %<cr>
     autocmd FileType javascript set sw=0 sts=0 ts=2 expandtab
@@ -103,11 +105,15 @@ if has("autocmd")
   augroup END "}}}
   " groovy autocmds {{{
   augroup filetype_groovy
+    autocmd!
     autocmd FileType groovy setlocal expandtab
   augroup END "}}}
   " kotlin autocmds {{{
   augroup filetype_kotlin
+    autocmd!
     autocmd FileType kotlin setlocal expandtab
+    autocmd FileType kotlin set suffixesadd=.kt path+=src/main/kotlin
+    autocmd FileType kotlin set includeexpr=substitute(v:fname,'\\.','/','g')
   augroup END " }}}
   " java autocmds {{{
   augroup filetype_java
@@ -126,6 +132,7 @@ if has("autocmd")
   augroup END "}}}
   " build.gradle {{{
   augroup build_gradle
+    autocmd!
     autocmd BufRead build.gradle setlocal sts=2 sw=2 ts=2 expandtab
   augroup END "}}}
   " augroup buffer_leave
@@ -162,5 +169,6 @@ Plugin 'vimwiki/vimwiki'
 Plugin 'ctrlpvim/ctrlp.vim.git'
 Plugin 'udalov/kotlin-vim'
 Plugin 'diepm/vim-rest-console.git'
+Plugin 'kovisoft/slimv.git'
 call vundle#end()
 filetype plugin indent on
