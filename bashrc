@@ -140,7 +140,7 @@ prompt_header() {
     fi
     dir=`echo $PWD | sed "s#$HOME#~#"`
     termsize=$(tput cols)
-    if [ "$($ps_hostname)" ]; then
+    if  $($ps_hostname); then
         hostname="${HOSTNAME%%.*}:"
     else
         hostname=""
@@ -167,7 +167,7 @@ prompt_header() {
 
     if (($UID)); then
 
-        if [ ! "$($ps_hostname)" ]; then
+        if [ $($ps_hostname) ]; then
             hostname_t=""
         fi
 

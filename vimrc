@@ -31,7 +31,11 @@ set background=dark
 if has("osx")
   let g:slimv_swank_cmd = '!osascript -e "tell application \"Terminal\" to do script \"sbcl --load ~/.vim/bundle/slimv/slime/start-swank.lisp\""'
 elseif has("linux")
-  let g:slimv_swank_cmd = '! xfce4-terminal -e "sbcl --load /home/danmiller/.vim/slime/start-swank.lisp" &'
+  if hostname() ==# 'augustus'
+    let g:slimv_swank_cmd = '!tmux new-window "sbcl --load ~/.vim//bundle/slimv/slime/start-swank.lisp"'
+  else
+    let g:slimv_swank_cmd = '! xfce4-terminal -e "sbcl --load /home/danmiller/.vim/slime/start-swank.lisp" &'
+  endif
 endif
 let g:slimv_repl_split = 3
 
@@ -159,16 +163,17 @@ nnoremap <leader>z :copen<cr>
 set rtp+=~/.vim/bundle/Vundle.vim
 filetype off
 call vundle#begin()
-Plugin 'tpope/vim-vinegar'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'danielcliffordmiller/vim-tmux-integration'
-Plugin 'danielcliffordmiller/vim-base64'
-Plugin 'vimwiki/vimwiki'
+Plugin 'chr4/nginx.vim'
 Plugin 'ctrlpvim/ctrlp.vim.git'
-Plugin 'udalov/kotlin-vim'
+Plugin 'danielcliffordmiller/vim-base64'
+Plugin 'danielcliffordmiller/vim-tmux-integration'
 Plugin 'diepm/vim-rest-console.git'
 Plugin 'kovisoft/slimv.git'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-vinegar'
+Plugin 'udalov/kotlin-vim'
+Plugin 'vimwiki/vimwiki'
 call vundle#end()
 filetype plugin indent on
