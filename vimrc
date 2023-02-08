@@ -79,12 +79,11 @@ if has("autocmd")
     autocmd FileType vim setlocal foldmethod=marker
     autocmd FileType vim setlocal softtabstop=2 tabstop=2 shiftwidth=2 expandtab
   augroup END "}}}
-  " netrw autocmds {{{
-  "augroup filetype_netrw
-  "  autocmd!
-  "  autocmd FileType netrw nunmap <buffer> <LeftMouse>
-  "  autocmd FileType netrw nmap <buffer> <2-LeftMouse> <Plug>NetrwLeftmouse
-  "augroup END "}}}
+  " vimwiki autocmds {{{
+  augroup filetype_vimwiki
+    autocmd!
+    autocmd BufEnter *.wiki set textwidth=70
+  augroup END "}}}
   " yaml autocmds {{{
   augroup filetype_yaml
     autocmd!
