@@ -175,5 +175,6 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-vinegar'
 Plugin 'udalov/kotlin-vim'
 Plugin 'vimwiki/vimwiki'
+Plugin 'vito-c/jq.vim'
 call vundle#end()
 filetype plugin indent on
