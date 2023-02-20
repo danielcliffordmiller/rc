@@ -1,0 +1,158 @@
+
+(add-to-list 'load-path "~/.emacs.d/elpa/slime-20210802.2231")
+(add-to-list 'load-path "~/.emacs.d/pde")
+(add-to-list 'load-path "~/.emacs.d/import-complete-emacs")
+(add-to-list 'load-path "~/.emacs.d/target-si-config")
+(add-to-list 'load-path "~/.emacs.d/redo")
+
+(require 'redo+)
+(require 'package)
+(require 'slime-autoloads)
+(require 'projectile)
+(require 'ido)
+(require 'gnutls)
+(require 'gradle-mode)
+;(require 'expand-region)
+
+;(load "pde-load")
+(if (eq system-type "darwin")
+    (load-file "~/.target.emacs"))
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-?") 'redo)
+
+(setq-default indent-tabs-mode nil)
+
+(ido-mode t)
+
+(defun gradle-bootrun ()
+  "Execute gradle bootrun command"
+  (interactive)
+  (gradle-run "bootrun"))
+
+(defun gradle-run-task ()
+  "Excute gradle run command"
+  (interactive)
+  (gradle-run "run"))
+
+(defun run-script ()
+  "Execute current script"
+  (interactive)
+  (shell-command (concat (buffer-file-name) (read-string "Enter arguments: "))))
+
+(defun forward-search-symbol-at-point ()
+  "Search forward for symbol at point"
+  (interactive)
+  (search-forward (symbol-name (symbol-at-point))))
+
+(defun backward-search-symbol-at-point ()
+  "Search backword for symbol at point"
+  (interactive)
+  (search-backward (symbol-name (symbol-at-point))))
+
+(setq package-enable-at-startup nil)
+;(setq mac-option-modifier 'meta)
+;(setq mac-command-modifier nil)
+(package-initialize)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(cperl-auto-newline nil)
+ '(gradle-gradlew-executable "./gradlew")
+ '(gradle-mode t)
+ '(gradle-use-gradlew t)
+ '(inverse-video t)
+ '(line-move-visual nil)
+ '(linum-relative-global-mode t)
+ '(mac-command-modifier nil)
+ '(mac-function-modifier nil)
+ '(mac-option-modifier 'meta)
+ '(package-selected-packages
+   '(apt-sources-list lsp-mode jq-mode racket-mode flyspell-correct dockerfile-mode cider protobuf-mode find-file-in-project gradle-mode sqlite3 sqlite ## ivy projectile clojure-mode adoc-mode docker magit yaml-mode flycheck-kotlin linum-relative highlight-parentheses markdown-mode paredit restclient kotlin-mode ac-slime auto-complete slime reverse-theme jdee groovy-mode evil-visual-mark-mode))
+ '(projectile-project-root-files
+   '("dune-project" "pubspec.yaml" "info.rkt" "Cargo.toml" "stack.yaml" "DESCRIPTION" "Eldev" "Cask" "shard.yml" "Gemfile" ".bloop" "deps.edn" "build.boot" "project.clj" "build.sc" "build.sbt" "application.properties" "gradlew" "build.gradle.kts" "build.gradle" "pom.xml" "poetry.lock" "Pipfile" "tox.ini" "setup.py" "requirements.txt" "manage.py" "angular.json" "package.json" "gulpfile.js" "Gruntfile.js" "mix.exs" "rebar.config" "composer.json" "CMakeLists.txt" "Makefile" "WORKSPACE" "default.nix" "meson.build" "SConstruct" "GTAGS" "TAGS" "configure.ac" "configure.in" "cscope.out")))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(load "import-jvm-class")
+(load "si-config")
+
+;(linum-on)
+(put 'upcase-region 'disabled nil)
+(add-hook 'prog-mode-hook (lambda ()
+                            ;; (linum-relative-mode)
+                            (show-paren-mode)
+                            (local-set-key (kbd "C-*")
+                                           'forward-search-symbol-at-point)
+                            (local-set-key (kbd "C-#")
+                                           'backward-search-symbol-at-point)))
+
+(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (setq fill-column 80)
+            (flyspell-mode)
+            (auto-fill-mode)))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq fill-column 80)
+            (flyspell-mode)
+            (auto-fill-mode)))
+
+(add-hook 'slime-mode-hook (lambda ()
+                             (set-up-slime-ac)
+                             (paredit-mode)))
+
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+
+(add-hook 'paredit-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "C->") 'paredit-forward-slurp-sexp)
+	    (local-set-key (kbd "C-<") 'paredit-forward-barf-sexp)
+	    (local-set-key (kbd "C-M->") 'paredit-backward-barf-sexp)
+	    (local-set-key (kbd "C-M-<") 'paredit-backward-slurp-sexp)))
+
+(add-hook 'perl-mode-hook (lambda () (local-set-key (kbd "C-c C-r") 'run-script)))
+
+(add-hook 'kotlin-mode-hook (lambda ()
+                              (local-set-key (kbd "C-c TAB") 'import-class)))
+
+(add-hook 'tcl-mode-hook (lambda ()
+                           (setq tcl-application "/opt/homebrew/Cellar/tcl-tk/8.6.13/bin/tclsh")))
+
+(add-hook 'gradle-mode-hook (lambda ()
+			      (local-set-key (kbd "C-c C-g g") 'gradle-bootrun)
+                              (local-set-key (kbd "C-c C-g c") 'open-project-config)
+                              ;; (local-set-key (kbd "C-c C-g C-b") (lambda ()
+                              ;;                                      (interactive)
+                              ;;                                      (gradle-execute "bootrun")))
+                              (local-set-key (kbd "C-c C-g C-c") (lambda ()
+                                                                   (interactive)
+                                                                   (gradle-execute "compileKotlin")))))
+
+
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(setq inferior-lisp-program "sbcl")
+(setq slime-contribs '(slime-fancy))
+(put 'downcase-region 'disabled nil)
+
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+(setq confirm-kill-emacs #'y-or-n-p)
+
